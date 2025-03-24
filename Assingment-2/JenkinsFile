@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/SRCEM-AIM-Class-A/AmitSaw'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t amitsaw/studentproject .'
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
+                    sh 'docker push amitsaw/studentproject'
+                }
+            }
+        }
+    }
+}
